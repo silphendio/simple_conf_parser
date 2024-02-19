@@ -57,7 +57,7 @@ too_many_commas: [1,,2,,3,,4,,5]
 There are many different configuration file formats out there, and I don't like any of them.
 - *YAML*:
   
-  The format is overly complicated nad it encourages unquoted strings. I find this problematic because it's too easy for something to get misinterpreted that way.
+  The format is overly complicated and it allows unquoted strings. I find this problematic because it's too easy for something to get misinterpreted that way.
   I'm also not a big fan of the syntax. Why do elements of an object of a list get the same level of indentation as simple elements?
   That said, strings can just be quoted and YAML offers optional JSON-style syntax. I'm not sure this makes things better.
 - *TOML*:
