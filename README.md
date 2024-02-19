@@ -22,7 +22,7 @@ For now, I recommend saving configuration files as `.conf`. That format isn't de
 `.yaml` is also an option, because simple conf files are largely a subset of YAML and thus gets syntax highlighting in fancy editors.
 
 ## installation
-pypi package is coming soon. For now, just drop the `conf_parser.py` and `tokenizer.py` in a python project.
+pypi package is coming soon. For now, just drop the `conf_parser.py` and `tokenizer.py` into a python project.
 
 ## usage
 Use the `loads` method. It returns a dict or throws and error (including the line/col) where it happened.
