@@ -1,4 +1,6 @@
-## A simple parser for configuration files
+This is a simple parser for configuration files. It can read a string into a python dict or turn a dict back into a formatted string, just like the `json.loads` and `json.dumps` methods.
+
+## The file format
 This parser is compatible with json, but far more lenient. Here's a list of features:
 - comments: everything from a `#` to the end of the line is ignored
 - commas are optional and can be replaced any kind of whitespace
@@ -7,16 +9,17 @@ This parser is compatible with json, but far more lenient. Here's a list of feat
 - numbers can be in any format that python supports: int, float or complex. (Starting an integer number with 0 is forbidden, but the parser currently just falls back to float)
 
 The following features are still subject to change.
-- `=` can be used instead of `:`. For compatibility with other config files.
+- `=` can be used instead of `:`. I don't know why I included that.
 - commas can be replaced with semicolons. Since those are treated like whitespace anyway, I'm not sure how useful this is.
 - strings can span multiple lines. Escaping a newline or using different quotes is currently neither required nor supported.
+The following things are *not* supported, but might be added later:
+- c-style comments
+- python-style docstrings
+- comments starting with a semicolon
 
 Simple configuration files have no specified extensions, because there a far too many out there. If this unexpectly gets popular, I might revisit the idea.
 For now, I recommend saving configuration files as `.conf`. That format isn't defined, and it's clear that it's meant to be a configuration file.
 `.yaml` is also an option, because simple conf files are largely a subset of YAML and thus gets syntax highlighting in fancy editors.
-
-Because this is written in pure python, it's about 40x slower than python's `json` module.
-This can be veryfied with the `bench.py` script and some json files [these](https://github.com/jdorfman/awesome-json-datasets).
 
 ## installation
 pypi package is coming soon. For now, just drop the `conf_parser.py` and `tokenizer.py` in a python project.
@@ -51,6 +54,11 @@ too_many_commas: [1,,2,,3,,4,,5]
     3: {null: "null"}
 }
 ```
+
+## performance
+The parser is written in pure python. Because because of that, it's about 40x slower than python's `json` module.
+
+This can be veryfied with the `bench.py` script and some json files [these](https://github.com/jdorfman/awesome-json-datasets).
 
 
 ## Why?
