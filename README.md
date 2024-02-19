@@ -29,24 +29,7 @@ obj = conf_parser.loads(conf_str)
 obj2 = conf_parser.loads(json_str, add_braces = False) # for json
 ```
 
-## Why?
-There are many different configuration file formats out there, and I don't like any of them.
-- *YAML*:
-  
-  The format is overly complicated nad it encourages unquoted strings. I find this problematic because it's too easy for something to get misinterpreted that way.
-  I'm also not a big fan of the syntax. Why do elements of an object of a list get the same level of indentation as simple elements?
-  That said, strings can just be quoted and YAML offers optional JSON-style syntax. I'm not sure this makes things better.
-- *TOML*:
-  
-  I just don't like the syntax for nested lists and subtables.
-- *JSON5*:
-
-- JSON is obviously unsuited for configuration files, but JSON5 is almost perfect.
-  It supports comments, trailing commas and unquoted keys. (Those are always treated as strings and therefore unambiguous.)
-  But since it needs to be compatible with Javascript, there are a few annoyances too:
-  - The commas are absolutely superfluous and should not be required.
-  - the {} at the end can be done away with if all configuration files are objects anyway.
-
+## how it looks like
 Here's an example config file (modified from the [JSON5 example](https://json5.org/#example)
 ```
 unquoted: 'and you can quote me on that'
@@ -68,3 +51,22 @@ too_many_commas: [1,,2,,3,,4,,5]
     3: {null: "null"}
 }
 ```
+
+
+## Why?
+There are many different configuration file formats out there, and I don't like any of them.
+- *YAML*:
+  
+  The format is overly complicated nad it encourages unquoted strings. I find this problematic because it's too easy for something to get misinterpreted that way.
+  I'm also not a big fan of the syntax. Why do elements of an object of a list get the same level of indentation as simple elements?
+  That said, strings can just be quoted and YAML offers optional JSON-style syntax. I'm not sure this makes things better.
+- *TOML*:
+  
+  I just don't like the syntax for nested lists and subtables.
+- *JSON5*:
+
+- JSON is obviously unsuited for configuration files, but JSON5 is almost perfect.
+  It supports comments, trailing commas and unquoted keys. (Those are always treated as strings and therefore unambiguous.)
+  But since it needs to be compatible with Javascript, there are a few annoyances too:
+  - The commas are absolutely superfluous and should not be required.
+  - the {} at the end can be done away with if all configuration files are objects anyway.
