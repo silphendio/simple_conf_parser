@@ -1,6 +1,6 @@
 from tokenizer import *
 import re
-#re_keyname = re.compile("[^\W0-9]\w*")
+# alternative regex (forbid starting digit): "[^\W0-9]\w*")
 re_keyname = re.compile("\w+")
 
 # parse tokens
@@ -92,12 +92,15 @@ def str_to_number(x):
     return complex(x)
 
 
-def loads(json_str: str, add_braces = True) -> dict:
-    if add_braces:
-        json_str = '{' + json_str + '}'
+def loads(json_str: str) -> dict:
     try:
         tokens = tokenize(json_str)
-        _, res = parse_value_id(tokens, 0)
+        # auto-detect top-level object without curly braces
+        if tokens[1].type == OBJ_ASSIGN:
+            tokens.append(make_token(len(json_str), OBJ_END))
+            i, res = parse_obj_id(tokens, 0)
+        i, res = parse_value_id(tokens, 0)
+        assert(i == len(tokens))
         return res
     except ValueError as e:
         line, col = index_to_coordinates(json_str, e.args[0]['index'])

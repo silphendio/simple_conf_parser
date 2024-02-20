@@ -18,7 +18,7 @@ json_str = open(sys.argv[1], encoding='utf-8').read()
 def test1():
     res2 = json.loads(json_str)
 def test2():
-    res1 = loads(json_str, add_braces = False)
+    res1 = loads(json_str)
 
 print("python json module (for reference)")
 print(timeit("test1()", setup="from __main__ import test1", number=number))
