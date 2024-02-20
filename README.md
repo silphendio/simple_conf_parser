@@ -4,8 +4,8 @@ This is a simple parser for configuration files. It can read a string into a pyt
 This parser is compatible with json, but far more lenient. Here's a list of features:
 - comments: everything from a `#` to the end of the line is ignored
 - commas are optional and can be replaced any kind of whitespace
-- top-level braces are automatically added, so they don't need to be in the configuration file. This can be disabled.
-- optionally unquoted object keys: Only numbers, letters and `_` are allowed in keys (Equivalent to the python regular expression `r'\w+'` )
+- for top-level objects or arrays, no braces are required
+- optionally unquoted object keys: Only numbers, letters and `_` are allowed in keys (Equivalent to the python regular expression `r'\w+'` ) Those are always interpreted as strings.
 - numbers can be in any format that python supports: int, float or complex. (Starting an integer number with 0 is forbidden, but the parser currently just falls back to float)
 
 The following features are still subject to change.
