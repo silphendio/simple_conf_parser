@@ -29,6 +29,7 @@ def parse_array_id(tokens: list[Token], i: int):
     return array
 
 def parse_obj_id(tokens: list[Token], i: int):
+    j = i # for error message
     obj = {}
     while i < len(tokens):
         if tokens[i].type == OBJ_END:
@@ -46,6 +47,7 @@ def parse_obj_id(tokens: list[Token], i: int):
         
         i, value = parse_value_id(tokens, i+2)
         obj[key] = value
+    err(tokens[j].index, "no closing brace found")
 
 
 def parse_key(tok: Token):
@@ -100,7 +102,8 @@ def loads(json_str: str) -> dict:
             tokens.append(make_token(len(json_str), OBJ_END))
             i, res = parse_obj_id(tokens, 0)
         i, res = parse_value_id(tokens, 0)
-        assert(i == len(tokens))
+        if i == len(tokens):
+            err(len(tokens[-1].index), "parsing finished, but there's still tokens left")
         return res
     except ValueError as e:
         line, col = index_to_coordinates(json_str, e.args[0]['index'])
@@ -123,8 +126,12 @@ def dumps_obj(d, indent = 0) -> str:
 
 def dumps_value(val, indent = 0):
     if isinstance(val, dict):
+        if len(val) == 0:
+            return "{}"
         return f"{{\n{dumps_obj(val, indent + 1)}\n{_TAB * indent}}}"
     elif isinstance(val, list):
+        if len(val) == 0:
+             return "[]"
         return f"[\n{dumps_array(val, indent + 1)}\n{_TAB * indent}]"
     else:
         return repr(val)
