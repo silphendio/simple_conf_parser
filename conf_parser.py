@@ -93,20 +93,27 @@ def str_to_number(x):
     # if even this fails, we keep the Exception
     return complex(x)
 
-
-def loads(json_str: str) -> dict:
-    try:
-        tokens = tokenize(json_str)
-        # auto-detect top-level object without curly braces
-        if tokens[1].type == OBJ_ASSIGN:
-            tokens.append(make_token(len(json_str), OBJ_END))
-            i, res = parse_obj_id(tokens, 0)
+def parse_tokens(tokens: list[Token]):
+    if len(tokens) > 1 and tokens[0].type in [STRING, CHUNK] and  tokens[1].type in [STRING, CHUNK]:
+        print("array detected")
+        tokens.append(make_token(-1, ARR_END))
+        i, res = parse_array_id(tokens, 0)
+    elif len(tokens) > 2 and tokens[1].type == OBJ_ASSIGN:
+        print("object detected")
+        tokens.append(make_token(-1, OBJ_END))
+        i, res = parse_obj_id(tokens, 0)
+    else:
         i, res = parse_value_id(tokens, 0)
-        if i == len(tokens):
-            err(len(tokens[-1].index), "parsing finished, but there's still tokens left")
-        return res
+    if i < len(tokens):
+        err(tokens[-1].index, "parsing finished, but there's still tokens left")
+    return res
+
+
+def loads(text: str) -> dict:
+    try:
+        return parse_tokens(tokenize(text))
     except ValueError as e:
-        line, col = index_to_coordinates(json_str, e.args[0]['index'])
+        line, col = index_to_coordinates(text, e.args[0]['index'])
         print(f"error while loading config: at {line}:{col}: {e.args[0]['msg']}")
 
 

@@ -31,7 +31,7 @@ tokens = tokenize(json_str)
 def test3():
     tokenize(json_str) 
 def test4():
-    _, _ = parse_value_id(tokens, 0)
+    parse_tokens(tokens)
 
 # test tokenize and parse separately
 print("tokenize only")

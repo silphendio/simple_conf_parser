@@ -1,16 +1,15 @@
 from conf_parser import *
 import sys
 
-json_str = open(sys.argv[1], encoding='utf-8').read()
-json_str = '{' + json_str + '}'
+file_str = open(sys.argv[1], encoding='utf-8').read()
 
 try:
-    tokens = tokenize(json_str)
+    tokens = tokenize(file_str)
     #for tok in tokens:
-    #    print(f"{index_to_coordinates(json_str, tok.index)}: {tok.type_str()} {repr(tok.value)}")
-    _, res = parse_value_id(tokens, 0)
+    #    print(f"{index_to_coordinates(file_str, tok.index)}: {tok.type_str()} {repr(tok.value)}")
+    res = parse_tokens(tokens)
     print(res)
     print(dumps(res))
 except ValueError as e:
-    line, col = index_to_coordinates(json_str, e.args[0]['index'])
+    line, col = index_to_coordinates(file_str, e.args[0]['index'])
     print(f"error while loading config: at {line}:{col}: {e.args[0]['msg']}")
