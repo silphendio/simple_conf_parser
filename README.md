@@ -1,3 +1,5 @@
+*I just found out about python's ConfigParser class. I guess I will rename this project soon. I just have to come up with a name first first.*
+
 This is a simple parser for configuration files. It can read a string into a python dict or turn a dict back into a formatted string, just like the `json.loads` and `json.dumps` methods.
 
 ## The file format
