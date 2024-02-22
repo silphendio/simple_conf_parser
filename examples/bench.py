@@ -1,6 +1,6 @@
 # benchmark (measured ~40x slower than python json on my machine)
 
-from conf_parser import *
+from sscl import *
 
 from timeit import timeit
 import json
@@ -26,25 +26,3 @@ print("conf parser")
 print(timeit("test2()", setup="from __main__ import test2", number=number))
 
 assert(json.dumps(res1) == json.dumps(res2))
-
-tokens = tokenize(json_str)
-def test3():
-    tokenize(json_str) 
-def test4():
-    parse_tokens(tokens)
-
-# test tokenize and parse separately
-print("tokenize only")
-print(timeit("test3()", setup="from __main__ import test3", number=number))
-print("parse only")
-print(timeit("test4()", setup="from __main__ import test4", number=number))
-
-tokens = tokenize(json_str)
-
-
-try:
-    tokens = tokenize(json_str)
-    _, res = parse_value_id(tokens, 0)
-except ValueError as e:
-    line, col = index_to_coordinates(json_str, e.args[0]['index'])
-    print(f"error while loading config: at {line}:{col}: {e.args[0]['msg']}")

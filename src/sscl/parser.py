@@ -1,4 +1,4 @@
-from tokenizer import *
+from .tokenizer import *
 import re
 # alternative regex (forbid starting digit): "[^\W0-9]\w*")
 re_keyname = re.compile("\w+")
@@ -89,7 +89,6 @@ def str_to_number(x):
     try:
         return float(x)
     except ValueError: pass
-
     # if even this fails, we keep the Exception
     return complex(x)
 
