@@ -5,7 +5,6 @@ from dataclasses import dataclass
 ARR_START, ARR_END, OBJ_START, OBJ_END, OBJ_ASSIGN, STRING, CHUNK = range(7)
 TOKEN_NAMES = ["ARR_START", "ARR_END", "OBJ_START", "OBJ_END", "OBJ_ASSIGN", "STRING", "CHUNK"]
 
-#Token = NamedTuple("Token", [("type", int), ("value", str), ("index", int)])
 @dataclass
 class Token:
     type: int
@@ -52,11 +51,17 @@ def tokenize(conf_str):
         i += 1
     return tokens
 
+# this needs to handle strings like "\\\\\\\"" too
 def _find_unescaped_match(s: str, i: int, c) -> int:
     j = i # for error handling
+    escape = False
     while i < len(s):
-        if s[i] == c and s[i-1] != '\\':
+        if s[i] == '\\':
+            escape = not escape
+        elif s[i] == c and not escape:
             return i
+        else:
+            escape = False
         i += 1
     err(j, "no matching quote found " + s[j:])
 
