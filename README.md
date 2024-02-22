@@ -12,11 +12,11 @@ The format is based on JSON, with the following changes:
 - for top-level objects or arrays, no braces are required
 - optionally unquoted object keys: Only numbers, letters and `_` are allowed in unquoted keys (Equivalent to the python regular expression `r'\w+'` ). Those are always interpreted as strings.
 - numbers can be in any format that python supports: int, float or complex. (Starting an integer number with 0 is forbidden, but the parser currently just falls back to float)
+- strings can span multiple lines. Escaping a line break means it will be ignored.
 
 The following features are still subject to change.
 - `=` can be used instead of `:`. I don't know why I included that.
-- commas can be replaced with semicolons. Since those are treated like whitespace anyway, I'm not sure how useful this is.
-- strings can span multiple lines. Escaping a newline or using different quotes is currently neither required nor supported.
+- commas can be replaced with semicolons. Since those are treated like whitespace anyway, I'm not sure how useful this is. 
 
 The following things are *not* supported, but might be added later:
 - c-style comments
