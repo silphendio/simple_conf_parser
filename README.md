@@ -1,13 +1,16 @@
-*I just found out about python's ConfigParser class. I guess I will rename this project soon. I just have to come up with a name first first.*
+# Silphy's Simple Configuration Language
 
-This is a simple parser for configuration files. It can read a string into a python dict or turn a dict back into a formatted string, just like the `json.loads` and `json.dumps` methods.
+SSCL is a superset of JSON.
+
+This repository contains a reference implementation in Python. It can read a string into a python dict or turn a dict back into a formatted string, just like the `json.loads` and `json.dumps` methods.
 
 ## The file format
-This parser is compatible with json, but far more lenient. Here's a list of features:
+The format is based on JSON, with the following changes:
 - comments: everything from a `#` to the end of the line is ignored
-- commas are optional and can be replaced any kind of whitespace
+- unicode whitespace characters count as whitespace too.
+- commas are optional and can be replaced any kind of whitespace.
 - for top-level objects or arrays, no braces are required
-- optionally unquoted object keys: Only numbers, letters and `_` are allowed in keys (Equivalent to the python regular expression `r'\w+'` ) Those are always interpreted as strings.
+- optionally unquoted object keys: Only numbers, letters and `_` are allowed in unquoted keys (Equivalent to the python regular expression `r'\w+'` ). Those are always interpreted as strings.
 - numbers can be in any format that python supports: int, float or complex. (Starting an integer number with 0 is forbidden, but the parser currently just falls back to float)
 
 The following features are still subject to change.
@@ -36,26 +39,25 @@ obj2 = conf_parser.loads(json_str, add_braces = False) # for json
 ```
 
 ## how it looks like
-Here's an example config file (modified from the [JSON5 example](https://json5.org/#example)
+Here's an example SSCL file
 ```
-unquoted: 'and you can quote me on that'
-singleQuotes: 'I can use "double quotes" here'
-lineBreaks: "Look, Mom!
-No \\n's!",
-hexadecimal: 0xdecaf
-leadingDecimalPoint: .8675309, andTrailing: 8675309.
-positiveSign: +1
-trailingComma: 'in objects', andIn: ['arrays',]
-"backwardsCompatible": "with JSON"
-ünicode_kéys: 1e3 # 3000.0
-no_commas: [1 2 3 4 5]
-too_many_commas: [1,,2,,3,,4,,5]
-# nunbers can be keys too
-777: {
-    1: [-inf, nan, null]
-    2: []
-    3: {null: "null"}
+unquoted_keys: 'single quotes are "here"'
+"quoted keys": "it's double quotes now"
+hexadecimal: 0xdecaf # this is a comments
+'number formats' [.123, 123., 1e3, inf, nan, -inf]
+ünicode_kéys: '試験'
+nested_objects: {
+  { a: 2, b: 4,
+    c: { a: 1, b: 2, c: [1, 2, 3] }
+  }
+# mixed types, optional comma
+  x: [  {x: 0, y: "null"  z: null}, false, [] ]
 }
+matrix: [
+  [ 1 2 3 ]
+  [ 4 5 6 ]
+  [ 7 8 9 ]
+]
 ```
 
 ## performance
@@ -80,4 +82,4 @@ There are many different configuration file formats out there, and I don't like 
   It supports comments, trailing commas and unquoted keys. (Those are always treated as strings and therefore unambiguous.)
   But since it needs to be compatible with Javascript, there are a few annoyances too:
   - The commas are absolutely superfluous and should not be required.
-  - the {} at the end can be done away with if all configuration files are objects anyway.
+  - Enclosing the entire configuration file in curly braces just doesn't make sense to me.
