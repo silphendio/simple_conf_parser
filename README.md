@@ -12,11 +12,11 @@ The format is based on JSON, with the following changes:
 - for top-level objects or arrays, no braces are required
 - optionally unquoted object keys: Only numbers, letters and `_` are allowed in unquoted keys (Equivalent to the python regular expression `r'\w+'` ). Those are always interpreted as strings.
 - numbers can be in any format that python supports: int, float or complex. (Starting an integer number with 0 is forbidden, but the parser currently just falls back to float)
+- strings can span multiple lines. Escaping a line break means it will be ignored.
 
 The following features are still subject to change.
 - `=` can be used instead of `:`. I don't know why I included that.
-- commas can be replaced with semicolons. Since those are treated like whitespace anyway, I'm not sure how useful this is.
-- strings can span multiple lines. Escaping a newline or using different quotes is currently neither required nor supported.
+- commas can be replaced with semicolons. Since those are treated like whitespace anyway, I'm not sure how useful this is. 
 
 The following things are *not* supported, but might be added later:
 - c-style comments
@@ -33,9 +33,9 @@ pypi package is coming soon. For now, just drop the `conf_parser.py` and `tokeni
 ## usage
 Use the `loads` method. It returns a dict or throws and error (including the line/col) where it happened.
 ```
-import conf_parser
-obj = conf_parser.loads(conf_str)
-obj2 = conf_parser.loads(json_str, add_braces = False) # for json
+import sscl
+obj = sscl.loads(conf_str)
+print(obj.dumps())
 ```
 
 ## how it looks like
@@ -44,10 +44,16 @@ Here's an example SSCL file
 unquoted_keys: 'single quotes are "here"'
 "quoted keys": "it's double quotes now"
 hexadecimal: 0xdecaf # this is a comments
-'number formats' [.123, 123., 1e3, inf, nan, -inf]
+multiline: "no \\n here \
+or there\
+but
+here
+" # equivalent to 'no \\n here or therebut\nhere\n'
+
+'number formats': [.123, 123., 1e3, inf, nan, -inf]
 ünicode_kéys: '試験'
 nested_objects: {
-  { a: 2, b: 4,
+  obj: { a: 2, b: 4,
     c: { a: 1, b: 2, c: [1, 2, 3] }
   }
 # mixed types, optional comma
@@ -58,6 +64,7 @@ matrix: [
   [ 4 5 6 ]
   [ 7 8 9 ]
 ]
+
 ```
 
 ## performance
