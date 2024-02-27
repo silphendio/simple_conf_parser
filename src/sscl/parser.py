@@ -1,9 +1,15 @@
 from .tokenizer import *
 import re
 # alternative regex (forbid starting digit): "[^\W0-9]\w*")
-re_keyname = re.compile("\w+")
+re_keyname = re.compile(r"\w+")
+re_int = re.compile(r"[-+]?(0[box])?\d*")
 
-# parse tokens
+
+class Args:
+    object_hook = None
+    parse_float = None
+    parse_int = None
+    object_pairs_hook = None
 
 def parse_value_id(tokens: list[Token], i: int = 0):
     t = tokens[i].type
@@ -16,7 +22,7 @@ def parse_value_id(tokens: list[Token], i: int = 0):
         return parse_array_id(tokens, i+1)
     elif t == OBJ_START:
         return parse_obj_id(tokens, i+1)
-    else: err(tokens[i].index, "expected '[', '{' or primitive")
+    else: err(tokens[i].index, "expected '[', '{' or primitive")           
 
 def parse_array_id(tokens: list[Token], i: int):
     array = []
@@ -85,70 +91,46 @@ def str_to_number(x):
     try:
         return int(x, 0) # this allows hex & binary, but forbids leading zeros
         # (that means a number with leading zeros will get parsed as float)
-    except ValueError: pass
-    try:
-        return float(x)
-    except ValueError: pass
-    # if even this fails, we keep the Exception
-    return complex(x)
+    except ValueError:
+        n = 0
+        try:
+            n = int(x)
+        except ValueError: pass
+        if n > 0:
+            raise ValueError("leading 0 is forbidden")
+    return float(x)
 
 def parse_tokens(tokens: list[Token]):
     if len(tokens) > 1 and tokens[0].type in [STRING, CHUNK] and  tokens[1].type in [STRING, CHUNK]:
-        print("array detected")
         tokens.append(make_token(-1, ARR_END))
         i, res = parse_array_id(tokens, 0)
+    
     elif len(tokens) > 2 and tokens[1].type == OBJ_ASSIGN:
-        print("object detected")
         tokens.append(make_token(-1, OBJ_END))
         i, res = parse_obj_id(tokens, 0)
+    
     else:
         i, res = parse_value_id(tokens, 0)
+    
     if i < len(tokens):
         err(tokens[-1].index, "parsing finished, but there's still tokens left")
     return res
 
 
-def loads(text: str) -> dict:
+def loads(text: str, *, object_hook=None, parse_float=None, parse_int=None,
+          object_pairs_hook=None, **kw) -> dict:
+    # get args
+    args = Args()
+    args.object_hook = object_hook
+    args.parse_float = parse_float # TODO: is this a good idea?
+    args.parse_int = parse_int # TODO: is this a good idea?
+    args.object_pairs_hook = object_pairs_hook
+
     try:
         return parse_tokens(tokenize(text))
     except ValueError as e:
         line, col = index_to_coordinates(text, e.args[0]['index'])
         print(f"error while loading config: at {line}:{col}: {e.args[0]['msg']}")
 
-
-_TAB = '\t'
-# serialize
-def dumps_array(arr, indent = 0) -> str:
-    s = []
-    for val in arr:
-        s.append('\t' * indent + dumps_value(val, indent))
-    return '\n'.join(s)
-
-def dumps_obj(d, indent = 0) -> str:
-    s = []
-    for key, val in d.items():
-        s.append('\t' * indent + key_str(key) + ": " + dumps_value(val, indent))
-    return '\n'.join(s)
-
-def dumps_value(val, indent = 0):
-    if isinstance(val, dict):
-        if len(val) == 0:
-            return "{}"
-        return f"{{\n{dumps_obj(val, indent + 1)}\n{_TAB * indent}}}"
-    elif isinstance(val, list):
-        if len(val) == 0:
-             return "[]"
-        return f"[\n{dumps_array(val, indent + 1)}\n{_TAB * indent}]"
-    else:
-        return repr(val)
-
-def key_str(key: str):
-    if re.fullmatch(re_keyname, key):
-        return key
-    else:
-        return repr(key)
-
-def dumps(obj, add_braces = False):
-    if isinstance(obj, dict) and not add_braces:
-        return dumps_obj(obj)
-    else: return dumps_value(obj)
+def load(fp, **kw):
+    return loads(fp.read(), **kw)

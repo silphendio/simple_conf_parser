@@ -1,0 +1,23 @@
+unquoted_keys: 'single quotes are "here"'
+"quoted keys": "it's double quotes now"
+hexadecimal: 0xdecaf # this is a comments
+multiline: "no \\n here \
+or there\
+but
+here
+" # equivalent to 'no \\n here or therebut\nhere\n'
+
+'number formats': [.123, 123., 1e3, inf, nan, -inf]
+ünicode_kéys: '試験'
+nested_objects: {
+  obj: { a: 2, b: 4,
+    c: { a: 1, b: 2, c: [1, 2, 3] }
+  }
+# mixed types, optional comma
+  x: [  {x: 0, y: "null"  z: null}, false, [] ]
+}
+matrix: [
+  [ 1 2 3 ]
+  [ 4 5 6 ]
+  [ 7 8 9 ]
+]

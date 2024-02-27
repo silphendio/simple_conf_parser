@@ -1,3 +1,4 @@
-from .parser import loads, dumps
+from .parser import loads, load
+from .dumper import dumps, dump
 
-__all__ = ["loads", "dumps"]
+__all__ = ["loads", "load", "dumps", "dump"]
