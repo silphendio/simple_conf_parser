@@ -6,7 +6,7 @@ This repository contains a reference implementation in Python. It can read a str
 
 ## The file format
 The format is based on JSON, with the following changes:
-- comments: everything from a `#` to the end of the line is ignored
+- comments: python-style or c-style (Everything from `#` or `//` to the end of the line, or between `/*` and `*/` is ignored.)
 - unicode whitespace characters count as whitespace too.
 - commas are optional and can be replaced any kind of whitespace.
 - for top-level objects or arrays, no braces are required
@@ -19,9 +19,7 @@ The following features are still subject to change.
 - commas can be replaced with semicolons. Since those are treated like whitespace anyway, I'm not sure how useful this is. 
 
 The following things are *not* supported, but might be added later:
-- c-style comments
 - python-style docstrings
-- comments starting with a semicolon
 
 Simple configuration files have no specified extensions, because there a far too many out there. If this unexpectly gets popular, I might revisit the idea.
 For now, I recommend saving configuration files as `.conf`. That format isn't defined, and it's clear that it's meant to be a configuration file.
