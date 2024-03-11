@@ -12,15 +12,13 @@ TOKEN_NAMES = ["ARR_START", "ARR_END", "OBJ_START", "OBJ_END", "OBJ_ASSIGN", "ST
 
 @dataclass
 class Token:
-    type: int
-    value: str
     index: int
+    type: int
+    value: str = ""
 
     def type_str(self):
         return TOKEN_NAMES[self.type]
 
-def make_token(index, type, value=""):
-    return Token(index=index, type=type, value=value)
 
 
 def tokenize(conf_str):
@@ -30,24 +28,24 @@ def tokenize(conf_str):
     while i < len(conf_str):
         c = conf_str[i]
         if c == '[':
-            tokens.append(make_token(i, ARR_START))
+            tokens.append(Token(i, ARR_START))
 
         elif c == ']':
-            tokens.append(make_token(i, ARR_END))
+            tokens.append(Token(i, ARR_END))
         
         elif c == '{':
-            tokens.append(make_token(i, OBJ_START))
+            tokens.append(Token(i, OBJ_START))
 
         elif c == '}':
-            tokens.append(make_token(i, OBJ_END))
+            tokens.append(Token(i, OBJ_END))
 
         elif c in ":=":
-            tokens.append(make_token(i, OBJ_ASSIGN))
+            tokens.append(Token(i, OBJ_ASSIGN))
 
         elif c in "'\"":
             m = re_string.match(conf_str, i)
             if m:
-                tokens.append(make_token(i, STRING, m.group()[1:-1]))
+                tokens.append(Token(i, STRING, m.group()[1:-1]))
                 i = m.end() - 1
             else:
                 err(i, "no matching quote found ")
@@ -67,10 +65,10 @@ def tokenize(conf_str):
         else :
             m = re_chunk.match(conf_str, i)
             if m:
-                tokens.append(make_token(i, CHUNK, m.group()))
+                tokens.append(Token(i, CHUNK, m.group()))
                 i = m.end() - 1
             else:
-                tokens.append(make_token(i, CHUNK, conf_str[i:]))
+                tokens.append(Token(i, CHUNK, conf_str[i:]))
                 i = len(conf_str) - 1
             
         i += 1
