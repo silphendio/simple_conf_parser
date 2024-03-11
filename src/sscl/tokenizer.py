@@ -19,8 +19,6 @@ class Token:
     def type_str(self):
         return TOKEN_NAMES[self.type]
 
-
-
 def tokenize(conf_str):
     tokens: list[Token] = []
     i = 0
