@@ -1,4 +1,6 @@
 import re
+from typing import Callable, Any
+
 from .parser import re_keyname
 
 def dump_float(x):
@@ -11,18 +13,17 @@ def dump_float(x):
     return str(x)
 
 class Args:
-    skipkeys=False # skip non-str keys, otherwise throw error
-    ensure_ascii=True # escape unicode
-    check_circular=True
-    indent=None
+    skipkeys: bool # skip non-str keys, otherwise throw error
+    ensure_ascii: bool # escape unicode
+    check_circular: bool
+    indent: str | None | int
     indent_str = ''
-    separators=(' ', ':')
-    default=repr
-    sort_keys=False
-    add_braces = False
+    separators: tuple[str, str]
+    default: Callable[[Any], str]
+    sort_keys: bool
     forbidden_refs = set()
-    dump_int = str
-    dump_float = dump_float
+    dump_int: Callable[[int], str]
+    dump_float: Callable[[float], str]
     
 
 def dumps_array(arr: list, args: Args, indent = 0) -> str:

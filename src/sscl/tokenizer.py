@@ -4,7 +4,7 @@ import re
 # single or double quotes, re.DOTALL for multiline strings
 re_string = re.compile(r"""("([^\\"]|(\\.))*")|('([^\\']|(\\.))*')""", re.DOTALL)
 
-# matches all except reserved characters or start of comments
+# matches all except whitespace, reserved characters or start of comments
 re_chunk = re.compile(r"([^\s\[\]{},;:=#'\"]|(/[^/*]))*")
 
 ARR_START, ARR_END, OBJ_START, OBJ_END, OBJ_ASSIGN, STRING, CHUNK = range(7)
